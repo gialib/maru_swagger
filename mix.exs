@@ -23,7 +23,7 @@ defmodule MaruSwagger.Mixfile do
   end
 
   defp deps do
-    [ { :maru,   github: "Skipper1992/maru" },
+    [ { :maru,   github: "gialib/maru" },
       { :ex_doc, "~> 0.14", only: :docs },
     ]
   end
@@ -31,7 +31,7 @@ defmodule MaruSwagger.Mixfile do
   defp package do
     %{ maintainers: ["Xiangrong Hao", "Roman Heinrich", "Cifer"],
        licenses: ["BSD 3-Clause"],
-       links: %{"Github" => "https://github.com/Skipper1992/maru_swagger"}
+       links: %{"Github" => "https://github.com/gialib/maru_swagger"}
      }
   end
 end

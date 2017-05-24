@@ -40,7 +40,7 @@ defmodule MaruSwagger.ResponseFormatter do
         end
       }
 
-      data = data |> Map.merge(Map.take(desc, [:consumes, :produces, :operationId]))
+      data = data |> Map.merge(Map.take(desc, [:consumes, :produces, :operationId, :security]))
 
       result |> put_in([url, String.downcase(method)], data)
     end)

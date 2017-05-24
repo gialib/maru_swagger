@@ -52,11 +52,14 @@ defmodule MaruSwagger.ConfigStruct do
   end
 
   defp allowed_swagger_fields do
-    [:host, :basePath, :schemes, :consumes, :produces]
+    [
+      :host, :basePath, :schemes, :consumes, :produces,
+      :tags, :securityDefinitions, :definitions, :externalDocs
+    ]
   end
 
   defp check_info_inject_keys(info) do
-    info |> Enum.filter(fn {k, v} ->
+    Enum.filter(info, fn {k, v} ->
       k in allowed_info_fields() and not v in [nil, ""]
     end)
   end

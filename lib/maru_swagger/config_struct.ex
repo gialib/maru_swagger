@@ -54,7 +54,8 @@ defmodule MaruSwagger.ConfigStruct do
   defp allowed_swagger_fields do
     [
       :host, :basePath, :schemes, :consumes, :produces,
-      :tags, :securityDefinitions, :definitions, :externalDocs
+      :tags, :securityDefinitions, :definitions, :externalDocs,
+      :version
     ]
   end
 

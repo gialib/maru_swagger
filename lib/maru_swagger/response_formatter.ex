@@ -6,13 +6,16 @@ defmodule MaruSwagger.ResponseFormatter do
       desc = desc || %{}
       responses = desc[:responses] || [%{code: 200, description: "ok"}]
       url = join_path(url_list)
-      if Map.has_key? result, url do
-        result
-      else
-        result |> put_in([url], %{})
-      end
-      |> put_in([url, String.downcase(method)], %{
-        tags: [tag],
+
+      result = 
+        if Map.has_key? result, url do
+          result
+        else
+          result |> put_in([url], %{})
+        end
+
+      data = %{
+        tags: desc[:tags] || [tag],
         description: desc[:detail] || "",
         summary: desc[:summary] || "",
         parameters: if is_nil(desc[:headers]) do
@@ -35,7 +38,11 @@ defmodule MaruSwagger.ResponseFormatter do
         responses: for r <- responses, into: %{} do
           {to_string(r.code), %{description: r.description}}
         end
-      })
+      }
+
+      data = data |> Map.merge(Map.take(desc, [:consumes, :produces, :operationId]))
+
+      result |> put_in([url, String.downcase(method)], data)
     end)
     wrap_in_swagger_info(paths, tags, config)
   end

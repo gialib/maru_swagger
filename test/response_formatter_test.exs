@@ -100,13 +100,22 @@ defmodule MaruSwagger.ResponseFormatterTest do
         conn |> json(%{ hello: :world })
       end
 
-      desc "creates res1"
-      params do
-        requires :name, type: String
-        requires :email, type: String
-      end
-      post "/res1" do
-        conn |> json(params)
+      desc "creates res1" do
+        consumes [
+          "application/x-www-form-urlencoded",
+          "application/json",
+          "multipart/form-data"
+        ]
+        produces ["application/xml", "application/json"]
+        operation_id "test_description"
+        tags ["pets"]
+        params do
+          requires :name, type: String
+          requires :email, type: String
+        end
+        post "/res1" do
+          conn |> json(params)
+        end
       end
     end
 
@@ -148,14 +157,28 @@ defmodule MaruSwagger.ResponseFormatterTest do
       assert json.basePath == "/api"
       assert json.host == "myapi.com"
     end
-    test "swagger info config" do
 
+    test "swagger info config" do
       swagger_docs =
         %ConfigStruct{
           module: MaruSwagger.ResponseFormatterTest.SuperTest.Homepage,
           info: [title: "title", desc: "description"]
         } |> MaruSwagger.Plug.generate
 
+      assert swagger_docs |> get_in([:paths, "/res1", "post", :consumes]) == [
+        "application/x-www-form-urlencoded",
+        "application/json",
+        "multipart/form-data"
+      ]
+
+      assert swagger_docs |> get_in([:paths, "/res1", "post", :produces]) == [
+        "application/xml",
+        "application/json"
+      ]
+
+      assert swagger_docs |> get_in([:paths, "/res1", "post", :tags]) == [
+        "pets"
+      ]
       assert swagger_docs |> get_in([:info, :title]) == "title"
       assert swagger_docs |> get_in([:info, :description]) == "description"
       assert swagger_docs |> get_in([:swagger]) == "2.0"

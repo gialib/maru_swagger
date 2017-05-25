@@ -70,6 +70,25 @@ defmodule MaruSwagger.ConfigStructTest do
       consumes: ["application/json"],
       produces: ["application/json", "application/vnd.api+json"]
     ]
+
+    test "info match" do
+      res = init(
+        at: "swagger/v1",
+        swagger_inject: @only_valid_fields,
+        info: [
+          title: "Swagger API For Testing v1",
+          description: "Swagger API Test Description",
+          version: "2.0.1"
+        ]
+      )
+      assert res.swagger_inject == @only_valid_fields
+      assert res.info == [
+        title: "Swagger API For Testing v1",
+        description: "Swagger API Test Description",
+        version: "2.0.1"
+      ]
+    end
+
     test "only allowes pre-defined fields" do
       res = init(
         at: "swagger/v1",

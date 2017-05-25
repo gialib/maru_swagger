@@ -46,7 +46,7 @@ defmodule MaruSwagger.ConfigStruct do
   end
 
   defp check_swagger_inject_keys(swagger_inject) do
-    swagger_inject |> Enum.filter(fn {k, v} ->
+    Enum.filter(swagger_inject, fn {k, v} ->
       k in allowed_swagger_fields() and not v in [nil, ""]
     end)
   end
@@ -54,8 +54,7 @@ defmodule MaruSwagger.ConfigStruct do
   defp allowed_swagger_fields do
     [
       :host, :basePath, :schemes, :consumes, :produces,
-      :tags, :securityDefinitions, :definitions, :externalDocs,
-      :version
+      :tags, :securityDefinitions, :definitions, :externalDocs
     ]
   end
 
@@ -66,7 +65,7 @@ defmodule MaruSwagger.ConfigStruct do
   end
 
   defp allowed_info_fields do
-    [:title, :desc]
+    [:title, :description, :version, :termsOfService, :contact, :license]
   end
 
 end

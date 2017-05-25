@@ -60,12 +60,10 @@ defmodule MaruSwagger.ResponseFormatter do
     for {k,v} <- (config.swagger_inject || []), into: res, do: {k,v}
   end
 
-  defp format_info(info) do
-    %{
-      title: info[:title],
-      description: info[:desc]
-    }
+  defp format_info(info) when is_list(info) do
+    Map.new(info)
   end
+  defp format_info(info), do: info
 
   defp format_default(config) do
     %{title: "Swagger API for #{elixir_module_name(config.module)}"}

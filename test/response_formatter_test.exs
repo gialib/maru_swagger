@@ -77,7 +77,7 @@ defmodule MaruSwagger.ResponseFormatterTest do
       swagger_docs =
         %ConfigStruct{
           module: MaruSwagger.ResponseFormatterTest.BasicTest.Homepage,
-          info: [title: "title", desc: "description"]
+          info: [title: "title", description: "description"]
         } |> MaruSwagger.Plug.generate
 
       assert swagger_docs |> get_in([:info, :title]) == "title"
@@ -202,7 +202,7 @@ defmodule MaruSwagger.ResponseFormatterTest do
       swagger_docs =
         %ConfigStruct{
           module: MaruSwagger.ResponseFormatterTest.SuperTest.Homepage,
-          info: [title: "title", desc: "description"]
+          info: [title: "title", description: "description"]
         } |> MaruSwagger.Plug.generate
 
       assert swagger_docs |> get_in([:paths, "/res1", "post", :consumes]) == [

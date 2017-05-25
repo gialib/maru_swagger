@@ -12,7 +12,7 @@ defmodule MaruVersioningTest do
       desc "basic get" do
         detail "detail of basic get"
         responses do
-          status :default, desc: "ok"
+          status :default, desc: "success"
           status 500, desc: "error"
         end
       end
@@ -58,7 +58,7 @@ defmodule MaruVersioningTest do
               %{description: "", in: "query", name: "id", required: true, type: "integer"}
             ],
             responses: %{
-              "default" => %{description: "ok"},
+              "default" => %{description: "success"},
               "500" => %{description: "error"},
             },
             tags: ["Version: v1"],
@@ -69,7 +69,7 @@ defmodule MaruVersioningTest do
             summary: "",
             description: "",
             parameters: [],
-            responses: %{"200" => %{description: "ok"}},
+            responses: %{"200" => %{description: "success"}},
             tags: ["Version: v1"],
           }
         }

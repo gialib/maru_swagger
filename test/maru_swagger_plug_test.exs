@@ -41,7 +41,7 @@ defmodule MaruSwagger.PlugTest do
              parameters: [
                %{description: "", in: "query", name: "id", required: true, type: "integer"}
              ],
-             responses: %{"200" => %{description: "ok"}},
+             responses: %{"200" => %{description: "success"}},
              tags: ["DEFAULT"],
            }
         }

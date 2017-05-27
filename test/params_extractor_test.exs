@@ -11,6 +11,12 @@ defmodule MaruSwagger.ParamsExtractorTest do
         params do
           requires :name, type: :string, source: "user_name"
           requires :email, type: :string
+          requires :type, type: :string, enum: ["user", "admin"], desc: "Type Description"
+          requires :color, type: :string, items: %{
+            type: "string",
+            enum: ["red", "green"],
+            default: "red"
+          }, desc: "Color"
         end
         post "/res1" do
           conn |> json(params)
@@ -24,17 +30,27 @@ defmodule MaruSwagger.ParamsExtractorTest do
       assert [
         %{description: "", in: "formData", name: "user_name", required: true, type: "string"},
         %{description: "", in: "formData", name: "email", required: true, type: "string"},
+        %{description: "Type Description", in: "formData", name: "type", required: true, type: "string", enum: ["user", "admin"]},
+        %{description: "Color", in: "formData", items: {:%{}, [line: 15], [type: "string", enum: ["red", "green"], default: "red"]}, name: "color", required: true, type: "string"}
       ] == extract_params(route_info)
     end
 
     test "force json" do
       route_info = route_from_module(BasicPostApi, "POST", ["res1"])
       assert [
-        %{description: "", in: "body", name: "body", required: false, schema: %{properties: %{"email" => %{description: "", required: true, type: "string"}, "user_name" => %{description: "", required: true, type: "string"}}}}
+        %{
+          description: "", in: "body", name: "body", required: false, schema: %{
+            properties: %{
+              "email" => %{description: "", required: true, type: "string"},
+              "user_name" => %{description: "", required: true, type: "string"},
+              "type" => %{description: "Type Description", required: true, type: "string", enum: ["user", "admin"]},
+              "color" => %{description: "Color", items: {:%{}, [line: 15], [type: "string", enum: ["red", "green"], default: "red"]}, required: true, type: "string"}
+            }
+          }
+        }
       ] == extract_params(route_info, %{force_json: true})
     end
   end
-
 
   describe "more extensive POST example" do
     defmodule BasicTest.Homepage do
@@ -50,7 +66,7 @@ defmodule MaruSwagger.ParamsExtractorTest do
         _ = params
         conn |> json(%{ hello: :world })
       end
-
+  
       desc "complex post"
       params do
         requires :name, type: :map do
@@ -63,7 +79,7 @@ defmodule MaruSwagger.ParamsExtractorTest do
       post "/map" do
         conn |> json(params)
       end
-
+  
       desc "dependent params"
       params do
         requires :foo, type: Integer
@@ -80,14 +96,14 @@ defmodule MaruSwagger.ParamsExtractorTest do
       post "/dependent" do
         conn |> json(params)
       end
-
+  
     end
-
+  
     defmodule BasicTest.Api do
       use Maru.Router
       mount MaruSwagger.ParamsExtractorTest.BasicTest.Homepage
     end
-
+  
     test "extracts expected swagger data from nested list params" do
       route_info = route_from_module(BasicTest.Homepage, "POST", ["list"])
       assert [
@@ -99,7 +115,7 @@ defmodule MaruSwagger.ParamsExtractorTest do
              }, type: "object" }, type: "array" }}}}
       ] = extract_params(route_info)
     end
-
+  
     test "extracts expected swagger data from nested map params" do
       route_info = route_from_module(BasicTest.Homepage, "POST", ["map"])
       assert [
@@ -113,7 +129,7 @@ defmodule MaruSwagger.ParamsExtractorTest do
                           }}}}}
       ] = extract_params(route_info)
     end
-
+  
     test "dependent params" do
       route_info = route_from_module(BasicTest.Homepage, "POST", ["dependent"])
       assert [
@@ -124,11 +140,11 @@ defmodule MaruSwagger.ParamsExtractorTest do
       ] = extract_params(route_info)
     end
   end
-
+  
   describe "one-line nested list test" do
     defmodule OneLineNestedList do
       use Maru.Router
-
+  
       desc "one-line nested list test"
       params do
         requires :foo, type: List[String]
@@ -137,7 +153,7 @@ defmodule MaruSwagger.ParamsExtractorTest do
         conn |> json(params)
       end
     end
-
+  
     test "one-line nested list test" do
       route_info = route_from_module(OneLineNestedList, "POST", ["path"])
       assert [

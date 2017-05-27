@@ -23,7 +23,9 @@ defmodule MaruSwagger.Mixfile do
   end
 
   defp deps do
-    [ { :maru,   github: "gialib/maru" },
+    [
+      ## { :maru,   github: "gialib/maru" },
+      { :maru,   path: "../maru" },
       { :ex_doc, "~> 0.14", only: :docs },
     ]
   end

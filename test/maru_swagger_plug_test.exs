@@ -8,7 +8,6 @@ defmodule MaruSwagger.PlugTest do
   describe "basic test" do
     defmodule BasicTest.Homepage do
       use Maru.Router
-      @test false
 
       desc "hello world action" do
 
@@ -25,7 +24,6 @@ defmodule MaruSwagger.PlugTest do
 
     defmodule BasicTest.Api do
       use Maru.Router
-      @test false
 
       mount MaruSwagger.PlugTest.BasicTest.Homepage
     end
